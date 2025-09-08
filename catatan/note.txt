@@ -1,0 +1,7 @@
+* ----- *
+
+=> API_KEY: idKey => 151106 / Putra
+=> API_KEY-limit: 500/day & +-1200/month => basic user
+=> Copyright reserved used!
+
+* ----- *

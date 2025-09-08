@@ -1,0 +1,51 @@
+<!-- Awal HTML5 Kode -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    <meta name="description" content="Situs scanning sebuah link/file berbentuk aneh yang mencurigakan.">
+    <link rel="icon" href="/assets/scan.png" type="image/x-icon" sizes="32x32">
+    <link rel="stylesheet" href="/style.css">
+    <title>Virus Scanner API | Scan</title>
+</head>
+<body>
+    <div class="container">
+        <h1>ETHERIS Scan (¬‿¬)</h1>
+        <p>Scan <u><i>URL</i></u> maupun virus pada <u><i>FILE</i></u> dengan keakuratan mencapai 90% / Tetap,
+            menggunakan API <strong>VirusTotal🔥.</strong>
+        </p>
+        
+        <section>
+            <h2>Scan a URL🔗</h2>
+            <input type="text" id="urlInput" placeholder="Masukkan URL (ex: https://example.com)">
+            <button onclick="scanURL()">Scan URL🔎</button>
+        </section>
+
+        <section>
+            <h2>Scan a File📂</h2>
+            <input type="file" id="fileInput">
+            <button onclick="scanFile()">Scan File🔎</button>
+        </section>
+
+        <div id="result"></div>
+
+        <div id="fullReportModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>Keseluruhan Scanning</h2>
+                <div id="fullReportContent"></div>
+            </div>
+        </div>
+        
+            <hr>
+            <p class="pess">Created by : <strong>Putra | JS Spec</strong></p>
+            <p class="pess">Powered with : <strong><code>Kali</code>, <code>APIs</code>, <code>Git</code> + <code>Vercel</code></strong></p>
+            <hr>
+    </div>
+
+    <script src="/main.js"></script>
+</body>
+</html>
+<!-- Akhir HTML5 Kode -->
