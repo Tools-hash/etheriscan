@@ -1,9 +1,3 @@
-// COPYRIGHT OF API_KEY
-// NOT ALLOWED => tidak diperbolehkan menggunakan secara tidak sah dan tanpa izin
-// API key ( VirusTotal )
-const API_KEY = process.env.VIRUSTOTAL_KEY;
-// idKey = 151106 / Putra
-
 // Utility function untuk mendapatkan elemen DOM dari id
 const getElement = id => document.getElementById(id);
 

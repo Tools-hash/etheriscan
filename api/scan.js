@@ -1,3 +1,4 @@
+const API_KEY = process.env.VIRUSTOTAL_KEY;
 const VT_KEY = process.env.VIRUSTOTAL_KEY;
 
 export const config = {
@@ -22,7 +23,7 @@ export default async function handler(req, res) {
 
         const vtRes = await fetch("https://www.virustotal.com/api/v3/files", {
           method: "POST",
-          headers: { "x-apikey": process.env.VT_KEY },
+          headers: { "x-apikey": VT_KEY },
           body: fs.createReadStream(file.filepath),
         });
 
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
       const vtRes = await fetch("https://www.virustotal.com/api/v3/urls", {
         method: "POST",
         headers: {
-          "x-apikey": process.env.VT_KEY,
+          "x-apikey": VT_KEY,
           "Content-Type": "application/x-www-form-urlencoded",
         },
         body: `url=${encodeURIComponent(url)}`,
