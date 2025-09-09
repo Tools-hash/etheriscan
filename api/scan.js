@@ -1,4 +1,3 @@
-const API_KEY = process.env.VIRUSTOTAL_KEY;
 const VT_KEY = process.env.VIRUSTOTAL_KEY;
 
 export const config = {
@@ -32,7 +31,7 @@ export default async function handler(req, res) {
       });
     } else {
       // kalau bukan file, berarti URL
-      const { type, url } = await req.json();
+      const { type, url } = await req.body;
       if (type !== "url") return res.status(400).json({ error: "Invalid request" });
 
       const vtRes = await fetch("https://www.virustotal.com/api/v3/urls", {
