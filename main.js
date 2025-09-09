@@ -1,7 +1,7 @@
 // COPYRIGHT OF API_KEY
 // NOT ALLOWED => tidak diperbolehkan menggunakan secara tidak sah dan tanpa izin
 // API key ( VirusTotal )
-const API_KEY = '48a03835d4787b3abc81db2095086d747793aebcd82e4744f7ff00d9104a2175';
+const API_KEY = process.env.VIRUSTOTAL_KEY;
 // idKey = 151106 / Putra
 
 // Utility function untuk mendapatkan elemen DOM dari id
@@ -54,35 +54,32 @@ async function scanURL() {
     if (!url) return showError('Masukan URL!');
 
     try {
-        new URL(url); // Validasi format URL
+        new URL(url);
     } catch {
-        return showError('Masukkan URL yang valid! (e.g., https://example.com)');
+        return showError('Masukkan URL valid! (e.g., https://example.com)');
     }
 
     try {
         showLoading('Scanning URL, Mohon Menunggu..');
 
-        const encodedUrl = encodeURIComponent(url);
-
-        // Submit URL ke VirusTotal
-        const submitResult = await makeRequest('https://www.virustotal.com/api/v3/urls', {
+        const response = await fetch("/api/scan", {
             method: "POST",
-            headers: {
-                'accept': 'application/json',
-                'content-type': 'application/x-www-form-urlencoded'
-            },
-            body: `url=${encodedUrl}`
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ type: "url", url })
         });
+
+        if (!response.ok) throw new Error("Request gagal");
+
+        const submitResult = await response.json();
 
         if (!submitResult.data?.id) {
             throw new Error('Gagal mendapatkan analisis ID');
         }
 
-        // Delay sebelum polling untuk hasil
         await new Promise(resolve => setTimeout(resolve, 3000));
-
         showLoading('Mendapatkan hasil scan..');
         await pollAnalysisResults(submitResult.data.id);
+
     } catch (error) {
         showError(`Error: ${error.message}`);
     }
@@ -91,9 +88,7 @@ async function scanURL() {
 // Handles proses dari scanning file menggunakan VirusTotal
 async function scanFile() {
     const file = getElement('fileInput').files[0];
-
     if (!file) return showError('Masukan File!');
-
     if (file.size > 32 * 1024 * 1024) return showError('Ukuran file melebihi batas 32MB!');
 
     try {
@@ -102,27 +97,33 @@ async function scanFile() {
         const formData = new FormData();
         formData.append('file', file);
 
-        // Upload file ke VirusTotal
-        const uploadResult = await makeRequest('https://www.virustotal.com/api/v3/files', {
-            method: 'POST',
+        // kirim ke backend (api/scan.js)
+        const response = await fetch("/api/scan", {
+            method: "POST",
             body: formData
         });
+
+        if (!response.ok) throw new Error("Upload gagal!");
+
+        const uploadResult = await response.json();
 
         if (!uploadResult.data?.id) {
             throw new Error('Gagal mendapatkan file ID!');
         }
 
-        // Delay sebelum polling untuk hasil
         await new Promise(resolve => setTimeout(resolve, 3000));
-
         showLoading('Mendapatkan hasil scan..');
-        const analysisResult = await makeRequest(`https://www.virustotal.com/api/v3/analyses/${uploadResult.data.id}`);
 
-        if (!analysisResult.data?.id) {
+        // lanjut polling hasilnya (masih bisa ke backend juga biar aman)
+        const analysisResult = await fetch(`/api/scan?id=${uploadResult.data.id}`);
+        const resultJson = await analysisResult.json();
+
+        if (!resultJson.data?.id) {
             throw new Error('Gagal mendapatkan hasil analisis!');
         }
 
-        await pollAnalysisResults(analysisResult.data.id, file.name);
+        await pollAnalysisResults(resultJson.data.id, file.name);
+
     } catch (error) {
         showError(`Error: ${error.message}`);
     }
